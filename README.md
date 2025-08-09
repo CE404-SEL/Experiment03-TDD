@@ -54,3 +54,70 @@ void testNegativeBalance() {
 ### پرسش سوم - به‌نظر شما و بر اساس تجربه‌ی به‌دست آمده، نوشتن آزمون پس از نوشتن برنامه، چه مشکلاتی را می‌تواند بسازد؟
 
 نوشتن آزمون بعد از توسعه کد ممکن است باعث شود برخی خطاهای احتمالی نادیده گرفته شوند. برنامه‌نویس گاهی ناخواسته تست‌هایی می‌نویسد که صرفا صحت کد را تأیید می‌کند، نه اینکه به‌دنبال کشف ایراد باشد. در نتیجه اشکالات منطقی ممکن است مدت‌ها پنهان بمانند و بعدها خطاهای جدی ایجاد کنند. مثلا در همین مثال، سناریوی موجودی منفی نه‌تنها کد اشتباه داشت، بلکه تستی هم برای تأیید آن نوشته شده بود و با گذر موفق این تست‌ها، یک خطای خطرناک می‌توانست با اطمینان کامل وارد سیستم شود.
+
+## بخش دوم - به کارگیری TDD
+
+در این بخش، با رویکرد TDD برای متد AccountBalanceCalculator چند تست اولیه نوشته شده است که در ابتدا fail می‌شوند.
+
+![failed all commented test cases](figs/img_4.png)
+
+در ادامه متوجه شدیم که یکی از مشکلات این است که نیاز است هنگامی که محاسبه موجودی صورت می‌گیرد، تراکنش محاسبه شده، در لیست تراکنش ها به کمک تابع **addTransaction** قرار بگیرد.
+
+از طرفی چون دونوع مختلف از تراکنش را داریم، در صورت موفقیت‌آمبز بودن هرکدام از آنها، با استفاده از تابع گفته شده، تراکنش مربوطه را اضافه می‌کنیم.
+
+کد تغییر یافته محاسبه موجودی به صورت زیر است:
+
+```JAVA
+public static int calculateBalance(List<Transaction> transactions) {
+    int balance = 0;
+    for (Transaction t : transactions) {
+        if (t.getType() == TransactionType.DEPOSIT) {
+            balance += t.getAmount();
+            addTransaction(t);
+        } else if (t.getType() == TransactionType.WITHDRAWAL) {
+            if (balance >= t.getAmount()) {
+                balance -= t.getAmount();
+                addTransaction(t);
+            } else {
+                System.out.println("Transaction Failed!");
+            }
+        }
+    }
+    return balance;
+}
+```
+
+بعد از این تغیرات، دو تست کیس، پاس شدند. اما تست‌کیس آخر هنوز پاس نشده است.
+
+![failed test case](figs/img_5.png)
+
+پس از بررسی این تست‌کیس متوجه شدیم که نیازمندی دیگری اینجاست که نیاز است صرفا آخرین تراکنش‌های محاسبه شده، در تاریخچه موجود باشند.
+
+برای برقرار کردن این موضوع از متد **clearTransactionHistory** در کلاس **AccountBalanceCalculator** استفاده کردیم:
+
+```JAVA
+public static int calculateBalance(List<Transaction> transactions) {
+    int balance = 0;
+    clearTransactionHistory();
+    for (Transaction t : transactions) {
+        if (t.getType() == TransactionType.DEPOSIT) {
+            balance += t.getAmount();
+            addTransaction(t);
+        } else if (t.getType() == TransactionType.WITHDRAWAL) {
+            if (balance >= t.getAmount()) {
+                balance -= t.getAmount();
+                addTransaction(t);
+            } else {
+                System.out.println("Transaction Failed!");
+            }
+        }
+    }
+    return balance;
+}
+```
+
+سپس دوباره تست‌ها را اجرا می‌کنیم:
+
+![failed test case](figs/img_6.png)
+
+همانطور که مشاهده میشود، همه تست‌ها پاس شدند.
