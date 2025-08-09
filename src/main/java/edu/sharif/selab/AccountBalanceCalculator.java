@@ -14,9 +14,12 @@ public class AccountBalanceCalculator {
             if (t.getType() == TransactionType.DEPOSIT) {
                 balance += t.getAmount();
             } else if (t.getType() == TransactionType.WITHDRAWAL) {
-                balance -= t.getAmount();
+                if (balance >= t.getAmount()) {
+                    balance -= t.getAmount();
+                } else {
+                    System.out.println("Transaction Failed!");
+                }
             }
-
         }
         return balance;
     }
