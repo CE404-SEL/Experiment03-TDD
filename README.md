@@ -7,7 +7,7 @@
 اجرا می‌کنیم.
 می‌بینیم که در ابتدا تمامی آزمون‌ها پاس می‌شوند و مشکلی وجود ندارد.
 
-![run tests](img.png)
+![run tests](figs/img.png)
 
 ### پرسش اول - در این کد چه خطایی وجود دارد؟ و به نظر شما چرا دیده نشده‌است؟
 
@@ -41,15 +41,15 @@ void testNegativeBalance() {
 
 نتیجه بعد از اجرای تست:
 
-![negative balace test faild](img_1.png)
+![negative balace test faild](figs/img_1.png)
 
 حال کد را اصلاح می‌کنیم:
 
-![fix method](img_2.png)
+![fix method](figs/img_2.png)
 
 سپس مجددا تست‌ها را اجرا می‌کنیم و می‌بینیم که تمامی تست‌ها پاس می‌شوند:
 
-![all tests passed!](img_3.png)
+![all tests passed!](figs/img_3.png)
 
 ### پرسش سوم - به‌نظر شما و بر اساس تجربه‌ی به‌دست آمده، نوشتن آزمون پس از نوشتن برنامه، چه مشکلاتی را می‌تواند بسازد؟
 
