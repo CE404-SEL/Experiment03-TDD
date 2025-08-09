@@ -42,6 +42,7 @@ public class AccountBalanceCalculatorTest {
         ));
         assertEquals(150, balance);
     }
+
     @Test
     void testZeroAmountTransaction() {
         int balance = AccountBalanceCalculator.calculateBalance(Arrays.asList(
@@ -65,6 +66,25 @@ public class AccountBalanceCalculatorTest {
         List<Transaction> history = AccountBalanceCalculator.getTransactionHistory();
         assertTrue(history.isEmpty(), "Transaction history should be empty before calculating balance");
     }
+
+
+    @Test
+    void testNegativeBalance() {
+        AccountBalanceCalculator.clearTransactionHistory();
+
+        Transaction deposit = new Transaction(TransactionType.DEPOSIT, 50);
+        Transaction withdrawal = new Transaction(TransactionType.WITHDRAWAL, 100);
+
+        AccountBalanceCalculator.addTransaction(deposit);
+        AccountBalanceCalculator.addTransaction(withdrawal);
+
+        int balance = AccountBalanceCalculator.calculateBalance(
+                AccountBalanceCalculator.getTransactionHistory()
+        );
+
+        assertEquals(50, balance, "Balance shouldn't be negative after withdrawal!");
+    }
+
 
 //    @Test
 //    void testTransactionHistoryAfterDeposits() {
